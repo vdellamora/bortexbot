@@ -13,6 +13,7 @@ let twitchConnected = false;
 let discordBotChannel = null;
 let discordVoiceChannel = null;
 let voiceJoined = false;
+let isSpeaking = 0;
 
 const pedirMusica = function(message, twitchNome = null, channel = discordBotChannel) {
     let args = message.substr(message.indexOf(' ')+1);
@@ -40,7 +41,12 @@ const pedirMusica = function(message, twitchNome = null, channel = discordBotCha
                 voiceJoined = true;
                 let stream = ytdl(response.url, { filter: 'audioonly' });
                 let dispatcher = connection.play(stream);
-                dispatcher.on('end', () => discordVoiceChannel.leave());
+                dispatcher.on('speaking', value => {
+                    isSpeaking = value;
+                    if (value === 0) {
+                        discordVoiceChannel.leave();
+                    }
+                })
                 if (!twitchNome) {
                     channel.send(`Tocando agora ${response.title}`);
                 } else {
