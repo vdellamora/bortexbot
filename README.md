@@ -31,6 +31,9 @@ nodemon src/bot.js
 </pre>
 
 ### Sites úteis:
+```
+https://discord.com/api/oauth2/authorize?client_id=<seuCID>&scope=bot
+```
 * https://discord.com/developers/applications
 * http://twitchapps.com/tmi
 * https://discord.js.org/?source=post_page---------------------------#/docs/main/stable/general/welcome
