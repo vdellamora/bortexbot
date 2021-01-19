@@ -1,7 +1,7 @@
-## bortexbot
+# bortexbot
 A Twitch-Discord bot that plays music on your Discord server via Twitch chat commands.
 
-# Dependencias usadas:
+### Dependencias usadas:
 <pre>
 discord.js --APi do discord
 tmi.js --API do twitch
@@ -12,7 +12,7 @@ dotenv (opcional) --Variaveis de ambiente
 nodemon (opcional) --Não precisar reiniciar o node na mão
 </pre>
 
-# Comandos para facilitar a vida:
+### Comandos para facilitar a vida:
 <pre>
 npm init -y
 npm i discord.js
@@ -24,13 +24,13 @@ npm i @discordjs/opus ffmpeg fluent-ffmpeg
 npm i -g nodemon (opcional)
 </pre>
 
-# Comandos de inicialização:
+### Comandos de inicialização:
 <pre>
 node src/bot.js
 nodemon src/bot.js
 </pre>
 
-# Sites úteis:
+### Sites úteis:
 <pre>
 https://discord.com/developers/applications
 http://twitchapps.com/tmi
@@ -38,7 +38,8 @@ https://discord.js.org/?source=post_page---------------------------#/docs/main/s
 https://github.com/tmijs/tmi.js#readme
 https://console.developers.google.com/
 </pre>
-# Download ffmpeg:
+
+### Download ffmpeg:
 <pre>
 https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-4.3.1-2021-01-01-full_build.7z
 </pre>
