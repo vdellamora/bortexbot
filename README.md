@@ -10,15 +10,15 @@ ytdl-core --Download de videos do youtube
 dotenv (opcional) --Variaveis de ambiente
 nodemon (opcional) --Não precisar reiniciar o node na mão
 
-Comandos para facilitar a vida:
-npm init -y
-npm i discord.js
-npm i dotenv
-npm i tmi.js
-npm i discord-youtube-api
-npm i ytdl-core
-npm i @discordjs/opus ffmpeg fluent-ffmpeg
-npm i -g nodemon (opcional)
+<br>Comandos para facilitar a vida:
+<br>npm init -y
+<br>npm i discord.js
+<br>npm i dotenv
+<br>npm i tmi.js
+<br>npm i discord-youtube-api
+<br>npm i ytdl-core
+<br>npm i @discordjs/opus ffmpeg fluent-ffmpeg
+<br>npm i -g nodemon (opcional)
 
 Comandos de inicialização:
 node src/bot.js
