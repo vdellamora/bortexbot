@@ -1,15 +1,16 @@
 # bortexbot
 A Twitch-Discord bot that plays music on your Discord server via Twitch chat commands.
-<br> 
-<br> Dependencias usadas:
-<br> discord.js --APi do discord
-<br> tmi.js --API do twitch
-<br> discord-youtube-api --API do youtube para discord
-<br> ytdl-core --Download de videos do youtube
-<br> @discordjs/opus ffmpeg fluent-ffmpeg --coisas para o stream da musica
-<br> dotenv (opcional) --Variaveis de ambiente
-<br> nodemon (opcional) --Não precisar reiniciar o node na mão
-<br> 
+
+<pre>
+ Dependencias usadas:
+ discord.js --APi do discord
+ tmi.js --API do twitch
+ discord-youtube-api --API do youtube para discord
+ ytdl-core --Download de videos do youtube
+ @discordjs/opus ffmpeg fluent-ffmpeg --coisas para o stream da musica
+ dotenv (opcional) --Variaveis de ambiente
+ nodemon (opcional) --Não precisar reiniciar o node na mão
+</pre>
 <br> Comandos para facilitar a vida:
 <br> npm init -y
 <br> npm i discord.js
