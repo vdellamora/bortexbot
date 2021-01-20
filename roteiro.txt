@@ -1,0 +1,37 @@
+- BORTEX BOT:
+
+
+Funcionamento:
+- Alguém na twitch digita um comando !play <link do youtube, título, ID, etc>; OK
+- Bot no discord entra no chat de voz que tem gente;							OK
+- Bot no discord começa a tocar tal pedido;										OK
+
+
+Parte da Twitch:
+- Receber comandos do chat do canal (VirusVortex);								OK
+- Comando !bp <pedido>;															OK
+- Pedido será manejado pelo NodeJS;												OK
+
+Parte do NodeJS:
+- Procurar o vídeo do YT;														OK
+- Colocar isso numa fila (com o autor do pedido e o título do vídeo);			OK
+- Se o bot estiver disponível, tocar a música através da parte do Discord;		OK
+
+Parte do Discord:
+- Pegar o vídeo da fila;														OK
+[- Escrever o autor do pedido e o vídeo no HTML;]
+- Entrar num chat de voz (o mais populado/chat específico);						OK
+- Tocar vídeo;																	OK
+- Quando terminar, ver se há um próximo item na fila:
+	- Se houver, repetir;														OK
+	- Se não houver, sai da sala de voz; [e apagar o vídeo tocado no HTML]		OK/2
+
+
+
+
+- BONUS:
+- Comandos de playlist (next, clear, pause, resume, list) no Discord;
+- Comandos de lista na Twitch;
+- Comando de play no próprio Discord;
+- Fazer uma página HTML com o pedido tocando e quem o pediu;
+- Cronômetro HTML;
