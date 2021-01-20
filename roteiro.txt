@@ -30,8 +30,9 @@ Parte do Discord:
 
 
 - BONUS:
-- Comandos de playlist (next, clear, pause, resume, list) no Discord;
-- Comandos de lista na Twitch;
-- Comando de play no próprio Discord;
+- Comandos de playlist (next, clear, pause, resume, list) no Discord;			OK
+- Comandos de lista na Twitch;													OK (ta feio)
+- Comando de play no próprio Discord;											OK
 - Fazer uma página HTML com o pedido tocando e quem o pediu;
 - Cronômetro HTML;
+- Filtro pra não permitir músicas muito longas (analisar tempo);

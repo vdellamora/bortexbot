@@ -4,6 +4,7 @@ console.log("Bondia");
 require("dotenv").config();
 const twitchTMI = require("tmi.js");
 const {Client} = require("discord.js");
+const {MessageEmbed} = require("discord.js");
 const YouTube = require("discord-youtube-api");
 const ytdl = require("ytdl-core");
 // console.log(process.env.twitchBot_user);
@@ -17,10 +18,11 @@ let discordTextChannel = null;
 let canalTwitch = 'virusvortex';
 
 let playlist = [];
+let playlistTocadas = [];
 let musicaAtual;
 let botCantando = false;
-
-
+let discordDispatcher;
+let botPausado = false;
 
 
 
@@ -68,6 +70,21 @@ clientTwitch.on('message', (channel, tags, message, self) => {
 		// 	console.log("Conectado no VoiceChannel");
 		// });
 	}
+
+	if((command === 'blist') || (command === 'bl')) {
+		if(botCantando){
+			var stringolaDoCaos = "";
+			stringolaDoCaos += 0 + ' - ' + ((musicaAtual.titulo.length > 30)?musicaAtual.titulo.slice(0,31)+'...':musicaAtual.titulo) + ' - ' + musicaAtual.autor + '\n';
+			for (var m in playlist){
+				if (m>3){ stringolaDoCaos += "...\n"; break; }
+				stringolaDoCaos += m + ' - ' + ((playlist[m].titulo.length > 30)?playlist[m].titulo.slice(0,31)+'...':playlist[m].titulo) + ' - ' + playlist[m].autor + '\n';
+			}
+
+			clientTwitch.action(channel, `${stringolaDoCaos}`); // Imprime a lista de músicas 
+		} else {
+			clientTwitch.action(channel, `A playlist está vazia`);
+		}
+	}
 });
 
 
@@ -91,22 +108,145 @@ discordClient.on('ready', () => {
 	// setTimeout(function(){discordTextChannel.send("Bondia, Discord");}, 2000); // Comando básico de mandar mensagem de texto
 });
 
+discordClient.on('message', (message) => {
+	if (message.author.bot) return;
+
+	const args = message.content.slice(1).split(' ');
+	const command = args.shift().toLowerCase();
+
+	if(botCantando){
+		switch(command){
+			case 'bpause':
+			//case 'bp':
+				if(botPausado){
+					botPausado = false;
+					discordDispatcher.resume();
+				} else {
+					botPausado = true;
+					discordDispatcher.pause();
+				}
+				return;
+
+			case 'bresume':
+			//case 'br':
+				if(botPausado){
+					botPausado = false;
+					discordDispatcher.resume();
+				}
+				return;
+			
+			case 'bnext':
+			case 'bn':
+				playlistTocadas.push(musicaAtual);
+				if(playlist.length>0) ytPlay();
+				else {
+					botCantando = false;
+					discordVoiceChannel.leave();
+				}
+				return;
+			
+			case 'bprev':
+			case 'bpv':
+				if(playlistTocadas.length>0){
+					if(botCantando) playlist.unshift(musicaAtual);
+					playlist.unshift(playlistTocadas.pop());
+					ytPlay();
+				}
+				return;
+			
+			case 'bclear':
+			case 'bc':
+				playlist = [];
+				playlistTocadas = [];
+				botCantando = false;
+				discordVoiceChannel.leave();
+				return;
+		}
+	}
+
+	if ((command === (`bplay`)) || (command === (`bp`))){
+		if(args.length < 1){discordTextChannel.send("Preciso de uma música para procurar!"); return;}
+		ytRequest(args.join(' '), message.author.username, false);
+
+		return
+	}
+
+	if ((command === (`blist`)) || (command === (`bl`))){
+		const playlistEmbed = new MessageEmbed()
+			.setColor('#0085c9');
+			// .addFields(
+			// 	{ name: 'Regular field title', value: 'Some value here' },
+			// 	{ name: '\u200B', value: '\u200B' },
+			// 	{ name: 'Inline field title', value: 'Some value here', inline: true },
+			// 	{ name: 'Inline field title', value: 'Some value here', inline: true },
+			// )
+			// .addField('Inline field title', 'Some value here', true);
+
+		var lst = [];
+		var contagem = playlistTocadas.length * (-1);
+		// lista.forEach((a, b) => {
+		// lst.push(\t• ${a.a} - ${a.b});
+		// });
+		
+		
+
+
+		if((playlistTocadas.length + playlist.length == 0) && (!musicaAtual)){
+			discordTextChannel.send("Playlist vazia.");
+			return;
+		}
+
+
+		let stringolaDoCaos = "";
+		playlistTocadas.forEach(element => {
+			// stringolaDoCaos += JSON.stringify(element) + "\n";
+
+			lst.push(`\t ${contagem++} - ${element.titulo} - ${element.autor} [${element.duration}]`);
+		});
+
+		if(musicaAtual){
+			// stringolaDoCaos += JSON.stringify(musicaAtual) + "\n";
+			lst.push(`\t ${contagem++} - ${musicaAtual.titulo} - ${musicaAtual.autor} [${musicaAtual.duration}]`);
+		}
+		
+		playlist.forEach(element => {
+			// stringolaDoCaos += JSON.stringify(element) + "\n";
+
+			lst.push(`\t ${contagem++} - ${element.titulo} - ${element.autor} [${element.duration}]`);
+		});
+
+		// playlistEmbed.fields.push({
+		// 	name: 'Playlist da Live',
+		// 	value: lst.join('\n'),
+		// 	inline: false
+		// });
+
+		playlistEmbed.setDescription(lst.join('\n'));
+		playlistEmbed.setFooter("\u3000".repeat(10)+"|");
+		// discordTextChannel.send(`${stringolaDoCaos}`); // Manda mensagem no discord com a playlist
+		discordTextChannel.send(playlistEmbed); // Manda mensagem no discord com a playlist
+		return;
+	}
+
+});
+
 
 
 
 //-----Parte Interna
 const youtube = new YouTube(process.env.youtube_token);
 
-function ytRequest(filtro, usuario){
+function ytRequest(filtro, usuario, ehTwitch=true){
 	youtube.searchVideos(filtro, 1).then( response => {
 		playlist.push({
 			url: response.url,
 			titulo: response.title,
-			autor: usuario
+			autor: usuario,
+			duration: response.length
 		});
 
 		discordTextChannel.send(`${usuario} pediu a música: "${response.title}"`); // Manda mensagem no Discord de qual música o usuário pediu
-		clientTwitch.action(canalTwitch, `@${usuario}, a música: "${response.title}" foi adicionada à playlist na posição ${playlist.length}.`); // O mesmo, porém usando comando 'me'
+		if(ehTwitch) clientTwitch.action(canalTwitch, `@${usuario}, a música: "${response.title}" foi adicionada à playlist na posição ${playlist.length}.`); // Retorna no chat que a música foi pedida
 
 		if(!botCantando) ytPlay();
 	});
@@ -114,16 +254,23 @@ function ytRequest(filtro, usuario){
 
 function ytPlay(){
 	musicaAtual = playlist.shift();
+	
 	discordVoiceChannel.join().then( connection => {
 		let stream = ytdl(musicaAtual.url, {filter:"audioonly"});
-		let dispatcher = connection.play(stream);
+		discordDispatcher = connection.play(stream);
 
-		dispatcher.on('speaking', value => {
+		discordDispatcher.on('speaking', value => {
 			if(value == 1) botCantando = true;
-			else if(playlist.length>0) ytPlay();
 			else {
-				botCantando = false;
-				discordVoiceChannel.leave();
+				if(!botPausado){
+					playlistTocadas.push(musicaAtual);
+					if(playlist.length>0){
+						ytPlay();
+					} else {
+						botCantando = false;
+						discordVoiceChannel.leave();
+					}
+				}
 			}
 
 		});
